@@ -1,0 +1,283 @@
+{
+  "template": {
+    "prefix": "template",
+    "body": [
+      "use std::io::Read;",
+      "const INF: i64 = 1i64 << 60;",
+      "const MOD: u64 = 1_000_000_007;",
+      "fn main() {",
+      "$1",
+      "}"
+    ]
+  },
+  "input all and prepare iterator": {
+    "prefix": "input",
+    "body": [
+      "let mut s: String = String::new();",
+      "std::io::stdin().read_to_string(&mut s).ok();",
+      "let mut itr = s.trim().split_whitespace();"
+    ]
+  },
+  "write multiple": {
+    "prefix": "write_all",
+    "body": [
+      "stdout().write_all(&out).unwrap();"
+    ]
+  },
+  "input one element": {
+    "prefix": "one",
+    "body": [
+      "let $1:$2 = itr.next().unwrap().parse().unwrap();"
+    ]
+  },
+  "input array": {
+    "prefix": "arr",
+    "body": [
+      "let $1: Vec<$2> = (0..n)",
+      ".map(|_| itr.next().unwrap().parse().unwrap())",
+      ".collect();"
+    ]
+  },
+  "input array2": {
+    "prefix": "arr2",
+    "body": [
+      "let a: Vec<($1, $1)> = (0..n).map(|_|",
+      "{(itr.next().unwrap().parse().unwrap(),itr.next().unwrap().parse().unwrap(),)}).collect();"
+    ]
+  },
+  "input string": {
+    "prefix": "string",
+    "body": [
+      "let s: Vec<char> = itr.next().unwrap().chars().collect();"
+    ]
+  },
+  "make graph": {
+    "prefix": "graph",
+    "body": [
+      "let mut graph: Vec<Vec<usize>> = vec![Vec::new(); n];",
+      "for i in 0..m {",
+      "graph[xy[i].0].push(xy[i].1);",
+      "graph[xy[i].1].push(xy[i].0);",
+      "}"
+    ]
+  },
+  "input grid": {
+    "prefix": "grid",
+    "body": [
+      "let h: usize = itr.next().unwrap().parse().unwrap();",
+      "let w: usize = itr.next().unwrap().parse().unwrap();",
+      "let grid: Vec<Vec<char>> = (0..h)",
+      ".map(|_| itr.next().unwrap().chars().collect()).collect();"
+    ]
+  },
+  "move on grid": {
+    "prefix": "move",
+    "body": [
+      "let dx: Vec<isize> = [0, -1, 0, 1, -1, 1, -1, 1].to_vec();",
+      "let dy: Vec<isize> = [1, 0, -1, 0, -1, 1, 1, -1].to_vec();",
+      "for y in 0..h {for x in 0..w {",
+      "for i in 0..8 {let nx = x as isize + dx[i];let ny = y as isize + dy[i];",
+      "if 0 <= nx && nx < w as isize && 0 <= ny && ny < h as isize {}}}}"
+    ]
+  },
+  "input string to digit": {
+    "prefix": "input_string2digit",
+    "body": [
+      "let s: Vec<u64> = s.trim().chars().map(|c| c.to_digit(10).unwrap() as u64).collect();"
+    ]
+  },
+  "lower_bound": {
+    "prefix": "lower_bound",
+    "body": [
+      "fn lower_bound<T: PartialOrd>(x: T, a: &Vec<T>) -> usize {",
+      "let mut l: usize = 0;let mut r: usize = a.len();",
+      "while r != l {let mid = (l + r) >> 1;if a[mid] < x {l = mid + 1;} else {r = mid;}}l}"
+    ]
+  },
+  "upper_bound": {
+    "prefix": "upper_bound",
+    "body": [
+      "fn upper_bound<T: PartialOrd>(x: T, a: &Vec<T>) -> usize {",
+      "let mut l: usize = 0;let mut r: usize = a.len();while r != l {let mid = (l + r) >> 1;",
+      "if a[mid] > x {r = mid;} else {l = mid + 1;}}l}"
+    ]
+  },
+  "gcd": {
+    "prefix": "gcd",
+    "body": [
+      "fn gcd(a: u64, b: u64) -> u64 {if b == 0 {return a;} gcd(b, a % b)}",
+      "fn lcm(a: u64, b: u64) -> u64 { a / gcd(a, b) * b }",
+      "fn gcd_array(a: &Vec<u64>) -> u64 { let mut res = a[0]; for i in 1..a.len() {res=gcd(res,a[i]);} res}",
+      "fn lcm_array(a: &Vec<u64>) -> u64 { let mut res = a[0]; for i in 1..a.len() {res=lcm(res,a[i]);} res}"
+    ]
+  },
+  "dijkstra": {
+    "prefix": "dijkstra",
+    "body": [
+      "fn dijkstra(start: usize, graph: &Vec<Vec<(usize, i64)>>) -> Vec<i64> {",
+      "let mut dist = vec![std::i64::MAX; graph.len()];",
+      "dist[start] = 0;",
+      "let mut bh = std::collections::BinaryHeap::new();",
+      "bh.push((0i64, start));",
+      "while let Some((cost, v)) = bh.pop() {",
+      "if dist[v] < -cost {continue;}",
+      "for e in graph[v].iter() {",
+      "let nv = e.0;let nc = e.1;",
+      "if dist[nv] > -cost + nc {",
+      "dist[nv] = -cost + nc;",
+      "bh.push((-dist[nv], nv));",
+      "}}}dist}"
+    ]
+  },
+  "union find": {
+    "prefix": "uf",
+    "body": [
+      "mod disjoint_set {",
+      "pub struct DisjointSet {parent: Vec<usize>,size: Vec<usize>,}",
+      "impl DisjointSet {",
+      "pub fn new(n: usize) -> DisjointSet {",
+      "DisjointSet {parent: (0..n).collect(),size: vec![1; n],}}",
+      "fn root(&mut self, x: usize) -> usize {",
+      "if x == self.parent[x] {x} else {",
+      "let tmp = self.parent[x];self.parent[x] = self.root(tmp);",
+      "self.parent[x]}}",
+      "pub fn merge(&mut self, x: usize, y: usize) {",
+      "let x = self.root(x);",
+      "let y = self.root(y);",
+      "if x == y {return;}",
+      "if self.size[x] > self.size[y] {self.size[x] += self.size[y];self.parent[y] = x;",
+      "} else {self.size[y] += self.size[x];self.parent[x] = y;}}",
+      "pub fn same(&mut self, x: usize, y: usize) -> bool {self.root(x) == self.root(y)}",
+      "pub fn size(&mut self, x: usize) -> usize {",
+      "let x = self.root(x);",
+      "self.size[x]}}}",
+    ]
+  },
+  "prime-factorization": {
+    "prefix": "prime_factorization",
+    "body": [
+      "nを素因数分解",
+      "let mut table: Vec<u64> = vec![0; n + 1];",
+      "let mut i = 2;",
+      "while i * i <= n {",
+      "while n % i == 0 {table[i] += 1;n /= i;}i += 1;}if n != 1 {table[n] += 1;}"
+    ]
+  },
+  "eratosthenes": {
+    "prefix": "erathos",
+    "body": [
+      "let mut is_prime: Vec<bool> = vec![true; 100010];",
+      "is_prime[0] = false;",
+      "is_prime[1] = false;",
+      "for i in 2..n+1 {if is_prime[i] {let mut j = i * 2;while j <= n {is_prime[j] = false;j += i;}}}"
+    ]
+  },
+  "enumeration": {
+    "prefix": "enum",
+    "body": [
+      "mod enumeration {",
+      "pub struct Enumeration {fact: Vec<u64>,finv: Vec<u64>,modulo: u64,}",
+      "impl Enumeration {",
+      "pub fn new(n: usize, modulo: u64) -> Enumeration {",
+      "let mut fact: Vec<u64> = vec![1; n];let mut inv: Vec<u64> = vec![1; n];",
+      "let mut finv: Vec<u64> = vec![1; n];",
+      "for i in 2..n {fact[i] = fact[i - 1] * (i as u64) % modulo;",
+      "inv[i] = modulo - (modulo / (i as u64)) * inv[(modulo as usize % i)] % modulo;",
+      "finv[i] = inv[i] * finv[i - 1] % modulo;}",
+      "Enumeration {fact: fact,finv: finv,modulo: modulo,}}",
+      "pub fn c(&self, n: usize, k: usize) -> u64 {if n < k {return 0;}",
+      "self.fact[n] * self.finv[n - k] % self.modulo * self.finv[k] % self.modulo}",
+      "pub fn h(&self, n: usize, k: usize) -> u64 {self.c(n + k - 1, k)}}}"
+    ]
+  },
+  "fenwick(1-indexed)": {
+    "prefix": "fenwick",
+    "body": [
+      "mod fenwick_tree {use std::ops::*;",
+      "pub struct FenwickTree<T, F> {data: Vec<T>,identity: T,operation: F,}",
+      "impl<T: Copy + Clone, F: Fn(T, T) -> T> FenwickTree<T, F> {",
+      "pub fn new(size: usize, id: T, op: F) -> FenwickTree<T, F> {",
+      "FenwickTree {data: vec![id; size + 1],identity: id,operation: op,}}",
+      "pub fn query(&self, i: usize) -> T {let mut res = self.identity;let mut idx = i as isize - 1;",
+      "while idx >= 0 {res = (self.operation)(res, self.data[idx as usize]);",
+      "idx = (idx & (idx + 1)) - 1;}res}",
+      "pub fn update(&mut self, i: usize, x: T) {let mut idx = i;while idx < self.data.len() {",
+      "self.data[idx] = (self.operation)(self.data[idx], x);idx |= idx + 1;}}}}"
+    ]
+  },
+  "BinaryIndexedTree": {
+    "prefix": "bit",
+    "body": [
+      "mod fenwick_tree {use std::ops::*;pub struct FenwickTree<T> {size: usize,",
+      "data: Vec<T>,identity: T,}",
+      "impl<T: Copy + Clone + AddAssign + Sub<Output = T>> FenwickTree<T> {",
+      "pub fn new(size: usize, id: T) -> FenwickTree<T> {FenwickTree {",
+      "size: size,data: vec![id; size + 2],identity: id,}}",
+      "pub fn query(&self, i: usize) -> T {let mut res = self.identity;",
+      "let mut idx = i as isize - 1;while idx >= 0 {res += self.data[idx as usize];",
+      "idx = (idx & (idx + 1)) - 1;}res}",
+      "pub fn update(&mut self, i: usize, x: T) {let mut idx = i;",
+      "while idx <= self.size {self.data[idx] += x;idx |= idx + 1;}}}}",
+    ]
+  },
+  "segment-tree": {
+    "prefix": "segtree",
+    "body": [
+      "mod segment_tree {",
+      "pub struct SegmentTree<T, F> {size: usize,data: Vec<T>,identity: T,operation: F,}",
+      "impl<T: Copy + Clone, F: Fn(T, T) -> T> SegmentTree<T, F> {",
+      "pub fn new(n: usize, id: T, op: F) -> SegmentTree<T, F> {",
+      "let mut size = 1;while size < n {size <<= 1;}",
+      "SegmentTree {size: size,data: vec![id; size * 2],identity: id,operation: op,}}",
+      "pub fn update(&mut self, mut i: usize, x: T) {i += self.size;self.data[i] = x;",
+      "i >>= 1;while i > 0 {self.data[i] = (self.operation)(self.data[i * 2], self.data[i * 2 + 1]);i >>= 1;}}",
+      "pub fn query(&self, mut l: usize, mut r: usize) -> T {",
+      "let mut a = self.identity;let mut b = self.identity;l += self.size;r += self.size;",
+      "while l < r {if (l & 1) == 1 {a = (self.operation)(a, self.data[l]);l += 1;}",
+      "if (r & 1) == 1 {r -= 1;b = (self.operation)(self.data[r], b);}l >>= 1;r >>= 1;}(self.operation)(a, b)}}}"
+    ]
+  },
+  "tree-lca": {
+    "prefix": "lca",
+    "body": [
+      "mod tree {use std::ops::*;",
+      "pub struct Tree<T> {tree: Vec<Vec<(usize, T)>>,depth: Vec<usize>,dist: Vec<T>,parent: Vec<Vec<usize>>,logn: usize,}",
+      "impl<T: Copy + Clone + Default + Add<Output = T> + Sub<Output = T>> Tree<T> {",
+      "// calc depth, cost of each vertices",
+      "pub fn new(n: usize, tree: &Vec<Vec<(usize, T)>>) -> Tree<T> {",
+      "let mut logn = 0;while 1 << logn < n {logn += 1;}",
+      "let parent: Vec<Vec<usize>> = vec![vec![n; n]; logn];",
+      "let mut t = Tree {tree: tree.clone(),depth: vec![0; n],dist: vec![Default::default(); n],parent: parent,logn: logn,};",
+      "t.init(0,0,0, Default::default());",
+      "// doubling parents",
+      "for i in 0..logn - 1 {for j in 0..n {t.parent[i + 1][j] = t.parent[i][t.parent[i][j]];}}t}",
+      "fn init(&mut self, v: usize, p: usize, d: usize, c: T) {",
+      "self.parent[0][v] = p;self.depth[v] = d;self.dist[v] = c;for &(nv, cost) in self.tree[v].clone().iter() {",
+      "if p != nv {self.init(nv, v, d + 1, c + cost);}}}",
+      "fn find_lca(&self, mut x: usize, mut y: usize) -> usize {",
+      "// follow parents of y",
+      "if self.depth[x] > self.depth[y] {x ^= y;y ^= x;x ^= y;}",
+      "for i in (0..self.logn).rev() {",
+      "if (self.depth[y] - self.depth[x]) >> i & 1 == 1 {y = self.parent[i][y];}}",
+      "if x == y {return y;}for i in (0..self.logn).rev() {let px = self.parent[i][x];let py = self.parent[i][y];",
+      "if px != py {x = px;y = py;}}self.parent[0][y]}",
+      "pub fn dist(&self, x: usize, y: usize) -> T {",
+      "let lca = self.find_lca(x, y);self.dist[x] + self.dist[y] - (self.dist[lca] + self.dist[lca])}}}"
+    ]
+  },
+  "matrix": {
+    "prefix": "matrix",
+    "body": [
+      "// mul(a_x*y, b_z*w) = c_x*w",
+      "fn mul(a: Vec<Vec<u64>>, b: Vec<Vec<u64>>) -> Vec<Vec<u64>> {",
+      "let mut res: Vec<Vec<u64>> = vec![vec![0; b[0].len()]; a.len()];",
+      "for i in 0..a.len() {for j in 0..b[0].len() {let mut val = 0;",
+      "for k in 0..b.len() {val ^= a[i][k] & b[k][j];}res[i][j] = val;}}res}",
+      "// 正方行列のみ",
+      "fn pow(mut a: Vec<Vec<u64>>, mut e: u64) -> Vec<Vec<u64>> {",
+      "let mut res: Vec<Vec<u64>> = vec![vec![0; a.len()]; a.len()];",
+      "for i in 0..a.len() {res[i][i] = !0u64;}while e > 0 {if e & 1 == 1 {",
+      "res = mul(res, a.clone());}a = mul(a.clone(), a.clone());e >>= 1;}res}"
+    ]
+  }
+}

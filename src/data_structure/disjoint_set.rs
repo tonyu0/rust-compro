@@ -32,7 +32,6 @@ mod disjoint_set {
       if x == y {
         return;
       }
-      // マージテク・・・集合のサイズが大きい方にマージする。
       if self.size[x] > self.size[y] {
         self.size[x] += self.size[y];
         self.parent[y] = x;
