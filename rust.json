@@ -86,6 +86,13 @@
       "let s: Vec<u64> = s.trim().chars().map(|c| c.to_digit(10).unwrap() as u64).collect();"
     ]
   },
+  "compress array": {
+    "prefix": "compress",
+    "body": [
+      "let mut b = a.clone();b.sort();b.dedup();let mut c = std::collections::HashMap::new();",
+      "for i in 0..b.len() {c.insert(b[i], i);}"
+    ]
+  },
   "lower_bound": {
     "prefix": "lower_bound",
     "body": [
@@ -278,6 +285,45 @@
       "let mut res: Vec<Vec<u64>> = vec![vec![0; a.len()]; a.len()];",
       "for i in 0..a.len() {res[i][i] = !0u64;}while e > 0 {if e & 1 == 1 {",
       "res = mul(res, a.clone());}a = mul(a.clone(), a.clone());e >>= 1;}res}"
+    ]
+  },
+  "permutation": {
+    "prefix": "perm",
+    "body": [
+      "fn permutation(n: usize, p: &mut Vec<usize>, used: &mut Vec<bool>, all: &mut Vec<Vec<usize>>) {",
+      "if p.len() == n {all.push(p.to_vec());return;}",
+      "for i in 0..n {if !used[i] {p.push(i);used[i] = true;permutation(n, p, used, all);p.pop();used[i] = false;}}}"
+    ]
+  },
+  "2Dcumsum": {
+    "prefix": "cumsum2",
+    "body": [
+      "let mut s: Vec<Vec<usize>> = vec![vec![0; w + 5]; h + 5];for i in 0..h {for j in 0..w {s[i + 1][j + 1] = a[i][j];}}for i in 1..h + 1 {",
+      "for j in 1..w + 1 {s[i][j + 1] += s[i][j];}}for i in 1..h + 1 {for j in 1..w + 1 {s[i + 1][j] += s[i][j];}}"
+    ]
+  },
+  "random": {
+    "prefix": "rand",
+    "body": [
+      "fn rand() -> u32 {static mut X: u32 = 123456789;static mut Y: u32 = 362436069;static mut Z: u32 = 521288629;static mut W: u32 = 88675123;",
+      "unsafe {let t = X ^ (X << 11);X = Y;Y = Z;Z = W;W = (W ^ (W >> 19)) ^ (t ^ (t >> 8));W}}"
+    ]
+  },
+  "z-algorithm": {
+    "prefix": "zalgo",
+    "body": [
+      "let s: Vec<char> = s.chars().collect();let n = s.len();",
+      "let mut a: Vec<usize> = vec![0; s.len()];a[0] = n;",
+      "let mut i = 1;let mut j = 0;while i < n {",
+      "while i + j < n && s[j] == s[i + j] {j += 1;}a[i] = j;if j == 0 {i += 1;continue;}",
+      "let mut k = 1;while i + k < n && k + a[k] < j {a[i + k] = a[k];k += 1;}i += k;j -= k;}"
+    ]
+  },
+  "pascal": {
+    "prefix": "pascal",
+    "body": [
+      "let mut c: Vec<Vec<usize>> = vec![vec![0; 1010]; 1010];for i in 0..1005 {",
+      "c[i][0] = 1;for j in 1..i {c[i][j] = (c[i - 1][j - 1] + c[i - 1][j]) % MOD;}c[i][i] = 1;}"
     ]
   }
 }
